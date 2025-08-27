@@ -2,6 +2,8 @@ baseURL: "https://ernestojakobus.github.io/website/"
 title: "Río de Oro"
 
 theme: "PaperMod"
+canonifyURLs: true
+relativeURLs: true
 
 module:
   imports:
