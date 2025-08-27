@@ -1,13 +1,12 @@
 baseURL: "https://ernestojakobus.github.io/website/"
 title: "Río de Oro"
 
+# Lokales, vendortes Theme (themes/PaperMod)
 theme: "PaperMod"
+
+# Hilft auf GitHub Pages (Projekt-Unterordner) gegen 404
 canonifyURLs: true
 relativeURLs: true
-
-module:
-  imports:
-    - path: github.com/adityatelange/hugo-PaperMod
 
 # ► Spanisch ist Default, keine Sprach-Unterordner (/ statt /es/)
 defaultContentLanguage: es
@@ -28,18 +27,17 @@ languages:
   en:
     disabled: true
 
-# Menü – nutze deine existierenden Routen/Ordnernamen
-# (Dein Abschnitt heißt "touren", daher bleibt die URL /touren/)
+# Navigation – ohne harte "/"-URLs, stattdessen pageRef (robust für Unterpfade)
 menu:
   main:
     - name: Inicio
-      url: /
+      pageRef: /
       weight: 1
     - name: Tours
-      url: /touren/
+      pageRef: touren
       weight: 5
     - name: Contacto
-      url: /kontakt/
+      pageRef: kontakt
       weight: 10
 
 enableInlineShortcodes: true
@@ -83,19 +81,7 @@ params:
   # Nur das, was du wirklich brauchst
   customCSS:
     - css/custom.css
-  # customJS: []   # leer lassen, falls nix global eingebunden werden soll
-
-  homeInfoParams:
-    Title: "¡Bienvenido a Río de Oro!"
-    Content: "🌊 Descubre tours inolvidables en el Río Paraguay."
-
-  socialIcons:
-    - name: instagram
-      title: Instagram
-      url: "https://www.instagram.com/rio_de_oro_lambare/"
-    - name: facebook
-      title: Facebook
-      url: "https://www.facebook.com/profile.php?id=61578929368383"
+  # customJS: []
 
 outputs:
   home: [HTML, RSS, JSON]
@@ -107,6 +93,7 @@ markup:
   highlight:
     noClasses: false
 
+# Permalinks: Beispiel für posts. Bei dir heißen die Touren "touren" (Section),
+# also brauchst du hier NICHTS für die Tour-Seiten. Lass posts so oder entferne es.
 permalinks:
-  page:
-    posts: "/:contentbasename/"
+  posts: "/:slug/"
