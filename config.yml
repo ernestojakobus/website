@@ -1,14 +1,14 @@
 baseURL: "https://ernestojakobus.github.io/website/"
 title: "Río de Oro"
 
-# Lokales, vendortes Theme (themes/PaperMod)
+# Lokales Theme aus themes/PaperMod
 theme: "PaperMod"
 
-# Hilft auf GitHub Pages (Projekt-Unterordner) gegen 404
+# Für GitHub Pages (Projekt unter /website/)
 canonifyURLs: true
 relativeURLs: true
 
-# ► Spanisch ist Default, keine Sprach-Unterordner (/ statt /es/)
+# ► Spanisch ist Default, keine Sprach-Unterordner
 defaultContentLanguage: es
 defaultContentLanguageInSubdir: false
 
@@ -27,17 +27,17 @@ languages:
   en:
     disabled: true
 
-# Navigation – ohne harte "/"-URLs, stattdessen pageRef (robust für Unterpfade)
+# Navigation ohne harte Root-URLs
 menu:
   main:
     - name: Inicio
       pageRef: /
       weight: 1
     - name: Tours
-      pageRef: touren
+      pageRef: touren          # verweist auf content/touren/_index.md
       weight: 5
     - name: Contacto
-      pageRef: kontakt
+      pageRef: kontakt         # content/kontakt/_index.md oder kontakt.md
       weight: 10
 
 enableInlineShortcodes: true
@@ -73,12 +73,12 @@ params:
   ShowPageNums: true
   ShowToc: true
   displayFullLangName: false
-  ShowLanguageSwitcher: false   # eigener Header, kein PaperMod-Switcher
+  ShowLanguageSwitcher: false
 
   images:
     - "images/papermod-cover.png"
 
-  # Nur das, was du wirklich brauchst
+  # Eigene CSS-Datei sauber über das Theme laden
   customCSS:
     - css/custom.css
   # customJS: []
@@ -93,7 +93,6 @@ markup:
   highlight:
     noClasses: false
 
-# Permalinks: Beispiel für posts. Bei dir heißen die Touren "touren" (Section),
-# also brauchst du hier NICHTS für die Tour-Seiten. Lass posts so oder entferne es.
+# Beispiel-Permalinks nur für "posts" (Touren sind eine eigene Section)
 permalinks:
   posts: "/:slug/"
