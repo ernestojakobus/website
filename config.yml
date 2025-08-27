@@ -1,8 +1,7 @@
-baseURL: "http://localhost:1313/"
+baseURL: "https://ernestojakobus.github.io/website/"
 title: "Río de Oro"
 
-theme:
-  - hugo-PaperMod
+theme: "PaperMod"
 
 module:
   imports:
