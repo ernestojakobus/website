@@ -1,0 +1,14 @@
+{{- /* Simple Video Shortcode
+     Usage:
+       {{< video src="videos/showboot.mp4" >}}
+       – oder ohne src: nutzt .Page.Params.video
+  */ -}}
+{{- $src := .Get "src" | default .Page.Params.video -}}
+{{- if $src -}}
+<div class="rio-video">
+  <video src="{{ (printf "/%s" $src) | relURL }}"
+         controls playsinline
+         style="width:100%; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,.1);">
+  </video>
+</div>
+{{- end -}}

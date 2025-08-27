@@ -1,0 +1,147 @@
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+    }
+
+    main.page__main,
+    .page__inner {
+      max-width: none !important;
+      padding: 0 !important;
+    }
+
+    .bars {
+      display: flex;
+      flex-direction: column;
+      gap: 4rem;
+      margin: 4rem 0;
+    }
+
+    a.bar {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .bar {
+      width: 100%;
+      background: rgba(255,255,255,0.9);
+      padding: 4rem 0;
+      box-sizing: border-box;
+    }
+
+    .bar-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      padding: 0 2rem;
+    }
+
+    .bar.reverse .bar-content {
+      flex-direction: row-reverse;
+    }
+
+    .bar-content img {
+      width: 45%;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .bar-content .text {
+      flex: 1;
+      color: #111;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .bar-content .text h2 {
+      margin: 0 0 1rem;
+      font-size: 2rem;
+      color: #111;
+    }
+
+    .bar-content .text p {
+      margin: 0;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      .bar-content {
+        flex-direction: column;
+      }
+      .bar-content img {
+        width: 100%;
+      }
+    }
+
+    .social-logos {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .social-logos img {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      transition: transform 0.2s ease;
+    }
+
+    .social-logos img:hover {
+      transform: scale(1.2);
+    }
+  </style>
+
+  <div class="bars">
+
+    <!-- Unsere Touren (klickbar) -->
+    <a href="{{ "/touren/" | relURL }}" class="bar fade-up">
+      <div class="bar-content">
+        <div class="text fade-left">
+          <h2>{{ i18n "tourenTitle" | default "Unsere Touren" }}</h2>
+          <p>{{ i18n "tourenDescription" | default "Schaue dir unsere Touren an." }}</p>
+        </div>
+        <img src="{{ "images/touren.png" | relURL }}" alt="Stadtrundfahrt Asunción" class="fade-right">
+      </div>
+    </a>
+
+    <!-- Unser Boot -->
+    <a href="{{ "/boot/" | relURL }}" class="bar fade-up">
+      <div class="bar-content">
+        <div class="text fade-left">
+          <h2>{{ i18n "bootTitle" | default "Unser Boot" }}</h2>
+          <p>{{ i18n "bootDescription" | default "Entdecke unser Tourboot – perfekt für Abenteuer auf dem Río Paraguay!" }}</p>
+        </div>
+        <img src="{{ "images/unserboot.png" | relURL }}" alt="Unser Boot" class="fade-right">
+      </div>
+    </a>
+
+    <!-- Social Media -->
+    <div class="bar fade-up social-bar">
+      <div class="bar-content">
+        <div class="text fade-left">
+          <h2>{{ i18n "followUs" | default "Folge uns auf Social Media" }}</h2>
+          <p>{{ i18n "followDesc" | default "Bleib auf dem Laufenden und sieh dir unsere neuesten Eindrücke an!" }}</p>
+          <div class="social-logos">
+            <a href="https://www.instagram.com/rio_de_oro_lambare/" target="_blank" aria-label="Instagram">
+              <img src="{{ "images/instagram-icon.png" | relURL }}" alt="Instagram">
+            </a>
+            <a href="https://www.facebook.com/profile.php?id=61578929368383" target="_blank" aria-label="Facebook">
+              <img src="{{ "images/facebook-icon.png" | relURL }}" alt="Facebook">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+

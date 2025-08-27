@@ -1,0 +1,25 @@
+<!-- layouts/partials/head.html -->
+{{- $title := cond .IsHome .Site.Title (printf "%s | %s" .Title .Site.Title) -}}
+{{- $desc  := .Params.description | default .Summary | default .Site.Params.description | default .Site.Title -}}
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>{{ $title }}</title>
+<link rel="canonical" href="{{ .Permalink }}">
+
+<meta name="description" content="{{ $desc }}">
+<meta name="generator" content="Hugo {{ hugo.Version }}">
+
+<!-- Theme CSS -->
+<link rel="stylesheet" href="{{ "css/style.css"  | relURL }}">
+
+<!-- Custom CSS -->
+<link rel="stylesheet" href="{{ "css/custom.css" | relURL }}">
+
+<!-- Favicon -->
+{{- with .Site.Params.assets.favicon -}}
+  <link rel="icon" href="{{ . | relURL }}">
+{{- else -}}
+  <link rel="icon" href="{{ "favicon.ico" | relURL }}">
+{{- end }}

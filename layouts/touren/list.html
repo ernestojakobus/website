@@ -1,0 +1,55 @@
+{{ define "main" }}
+<main id="main" class="main">
+  <header class="page-header" style="max-width: var(--page-width); margin: 0 auto;">
+    <h1>Excursiones</h1>
+  </header>
+
+  {{- $all := where .Site.RegularPages "Section" "touren" -}}
+  {{- $pages := $all.ByWeight.Then.ByDate.Reverse -}}
+
+  <section class="toures-grid" style="max-width: var(--page-width); margin: 1.5rem auto;">
+    <div class="toures-grid-inner">
+      {{- range $pages -}}
+        {{- $teaser := "" -}}
+        {{- with .Params.resumen -}}
+          {{- $teaser = . -}}
+        {{- else -}}
+          {{- if .Description -}}{{- $teaser = .Description -}}{{- end -}}
+        {{- end -}}
+
+        {{- $cover := "" -}}
+        {{- with .Params.image -}}
+          {{- $cover = . -}}
+        {{- else -}}
+          {{- $base := .File.BaseFileName | replace "-" "" -}}
+          {{- $cover = printf "images/touren/%s/cover.png" $base -}}
+        {{- end -}}
+
+        <article class="card tour-card">
+          <a class="card-media" href="{{ .RelPermalink }}" aria-label="{{ .Title }}">
+            <img
+              class="card-img"
+              src="{{ $cover | relURL }}"
+              alt="{{ .Title }}"
+              loading="lazy"
+              onerror="this.onerror=null;this.src='{{ `images/placeholder.jpg` | relURL }}';"
+            />
+          </a>
+
+          <div class="card-body">
+            <h2 class="card-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+
+            {{- if $teaser }}
+              <p class="card-text">{{ $teaser }}</p>
+            {{- end }}
+
+            <div class="card-actions">
+              <a class="btn btn-more" href="{{ .RelPermalink }}" aria-label="Más información sobre {{ .Title }}">Más información →</a>
+            </div>
+          </div>
+        </article>
+      {{- end -}}
+    </div>
+  </section>
+</main>
+{{ end }}

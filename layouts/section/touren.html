@@ -1,0 +1,64 @@
+{{ define "main" }}
+<section class="bars">
+  {{ $pages := where site.RegularPages "Section" "touren" }}
+  {{ $pages = sort $pages "Weight" "asc" "Date" "desc" }}
+
+  {{ if gt (len $pages) 0 }}
+    {{ range $pages }}
+      {{ $cover := "" }}
+      {{ with .Resources.GetMatch "cover*" }}{{ $cover = .RelPermalink }}{{ end }}
+      {{ if not $cover }}{{ with .Params.image }}{{ $cover = (printf "/%s" (trim . "/")) }}{{ end }}{{ end }}
+      {{ if not $cover }}
+        {{ with .Params.gallery }}
+          {{ if gt (len .) 0 }}
+            {{ $g0 := index . 0 }}
+            {{ if eq (printf "%T" $g0) "string" }}{{ $cover = (printf "/%s" (trim $g0 "/")) }}{{ end }}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+      {{ if not $cover }}
+        {{ $base := lower .File.BaseFileName }}
+        {{ $dir  := replace $base "-" "" }}
+        {{ $try := slice
+          (printf "static/images/touren/%s/cover.png"  $dir)
+          (printf "static/images/touren/%s/cover.jpg"  $dir)
+          (printf "static/images/touren/%s/cover.jpeg" $dir) }}
+        {{ range $try }}
+          {{ if not $cover }}{{ if fileExists . }}{{ $cover = (printf "/images/touren/%s/%s" $dir (path.Base .)) }}{{ end }}{{ end }}
+        {{ end }}
+      {{ end }}
+      {{ if not $cover }}{{ $cover = "/images/placeholder.jpg" }}{{ end }}
+
+      <div class="bar-card">
+        <div class="bar-content" style="display:flex;gap:1.6rem;flex-wrap:wrap;align-items:flex-start;">
+          <div class="text" style="flex:1 1 52%;">
+            <h2 style="margin:0">
+              <a href="{{ .RelPermalink }}" style="text-decoration:none;color:inherit;">{{ .Title }}</a>
+            </h2>
+
+            {{ if .Summary }}{{ .Summary | safeHTML }}{{ else }}<p>{{ .Plain | truncate 280 }}</p>{{ end }}
+
+            <p style="margin-top:1rem;">
+              <a class="button" href="{{ .RelPermalink }}">Más información →</a>
+            </p>
+          </div>
+
+          <a href="{{ .RelPermalink }}" style="flex:1 1 40%;display:block;">
+            <img src="{{ $cover }}" alt="{{ .Title }}" loading="lazy"
+                 onerror="this.onerror=null;this.src='/images/placeholder.jpg';"
+                 style="width:100%;height:auto;display:block;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,.15);" />
+          </a>
+        </div>
+      </div>
+    {{ end }}
+  {{ else }}
+    <div class="content-card">
+      <h2 style="margin:.2rem 0 .6rem">Aún no hay excursiones publicadas.</h2>
+      <ul>
+        <li>Archivos en <code>content/touren/</code> (ej.: <code>tour-1.md</code>).</li>
+        <li>Sin <code>draft: true</code> (o ejecuta <code>hugo server -D</code>).</li>
+      </ul>
+    </div>
+  {{ end }}
+</section>
+{{ end }}

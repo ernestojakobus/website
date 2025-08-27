@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    {{- partial "head.html" . -}}
+
+    <style>
+      /* ── Grundlayout: Abstand unter PaperMod-Header ── */
+      .page__main{ margin-top:80px; }
+
+      /* ── WhatsApp-Button (global) ── */
+      a.whatsapp-float,
+      a.whatsapp-float:link,
+      a.whatsapp-float:visited{
+        position:fixed; right:24px; bottom:-180px; /* fährt erst mit .show hoch */
+        width:150px !important; height:150px !important;
+        z-index:9999 !important; opacity:0;
+        transition:bottom .6s ease, opacity .6s ease, transform .15s ease;
+      }
+      a.whatsapp-float.show{ bottom:24px; opacity:1; }
+      a.whatsapp-float:hover{ transform:scale(1.03); }
+      a.whatsapp-float img{
+        display:block; width:100% !important; height:100% !important;
+        border-radius:50%; background:#fff; box-shadow:0 8px 30px rgba(0,0,0,.35);
+      }
+      @keyframes shake-zoom{
+        0%{transform:scale(1) rotate(0)}
+        20%{transform:scale(1.12) rotate(-5deg)}
+        40%{transform:scale(1.12) rotate(5deg)}
+        60%{transform:scale(1.07) rotate(-3deg)}
+        80%{transform:scale(1.07) rotate(3deg)}
+        100%{transform:scale(1) rotate(0)}
+      }
+      a.whatsapp-float.animate img{ animation:shake-zoom .9s ease-in-out; }
+
+      /* Mobil kleiner */
+      @media (max-width:640px){
+        a.whatsapp-float{ width:110px !important; height:110px !important; right:16px !important; }
+      }
+    </style>
+
+    {{ block "head_extra" . }}{{ end }}
+  </head>
+
+  <body class="{{ default "auto" .Site.Params.defaultTheme }}">
+    {{- partial "header.html" . -}}
+
+    <main class="page__main">
+      {{- block "main" . }}{{ end -}}
+    </main>
+
+    {{- partial "footer.html" . -}}
+
+    <!-- Einziger WhatsApp-Button -->
+    <a href="https://wa.me/595987365772"
+       class="whatsapp-float"
+       target="_blank"
+       aria-label="Chat por WhatsApp">
+      <img src="{{ "images/whatsapp-icon.png" | relURL }}" alt="WhatsApp">
+    </a>
+
+    <!-- Optionale zusätzliche Skripte aus params.customJS -->
+    {{- range .Site.Params.customJS -}}
+      <script src="{{ . | relURL }}" defer></script>
+    {{- end }}
+
+    <script>
+      /* ── Einfahr-Timing + Shakes: 3 s Delay, 1 s nach Einfahrt 1x shaken, dann alle 25 s ── */
+      (function(){
+        var wa = document.querySelector('.whatsapp-float');
+        if(!wa) return;
+
+        var slideEnded = false;
+
+        function shakeOnce(){
+          setTimeout(function(){
+            wa.classList.add('animate');
+            setTimeout(function(){ wa.classList.remove('animate'); }, 1000);
+          }, 1000); // 1 s nach Ende der Einfahr-Transition
+        }
+
+        function onTransitionEnd(ev){
+          if (ev.propertyName !== 'bottom') return;
+          slideEnded = true;
+          wa.removeEventListener('transitionend', onTransitionEnd);
+          shakeOnce();
+        }
+        wa.addEventListener('transitionend', onTransitionEnd);
+
+        // nach 3 s einfahren
+        setTimeout(function(){ wa.classList.add('show'); }, 3000);
+
+        // Fallback, falls kein transitionend gefeuert wird
+        setTimeout(function(){
+          if (!slideEnded) shakeOnce();
+        }, 3000 + 600 + 50); // 3 s Delay + 0,6 s Transition + Puffer
+
+        // Erinnerung alle 25 s
+        setInterval(function(){
+          if (!wa.classList.contains('show')) return;
+          wa.classList.add('animate');
+          setTimeout(function(){ wa.classList.remove('animate'); }, 1000);
+        }, 25000);
+      })();
+    </script>
+  </body>
+</html>

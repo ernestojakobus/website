@@ -1,0 +1,12 @@
+{{/* Shortcode-Wrapper: ruft das Partial robust auf. 
+   Nutzung im Inhalt:
+   - {{< gallery >}}                     -> nutzt .Params.gallery
+   - {{< gallery dir="boot" images="a.jpg,b.jpg" autoplay="true" >}}
+*/}}
+
+{{- $args := dict "Page" .Page -}}
+{{- with .Get "dir"      }}{{ $args = merge $args (dict "dir" .) }}{{ end -}}
+{{- with .Get "images"   }}{{ $args = merge $args (dict "images" .) }}{{ end -}}
+{{- with .Get "autoplay" }}{{ $args = merge $args (dict "autoplay" .) }}{{ end -}}
+
+{{ partial "gallery.html" $args }}

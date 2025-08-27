@@ -1,0 +1,64 @@
+{{- /* TPL: touren/single – KEIN <main> hier! */ -}}
+{{ define "main" }}
+
+  <article class="bars">
+    <div class="bar-card fade-up">
+      <div class="bar-content" style="flex-direction:column;gap:1.25rem;">
+
+        <!-- Titel + Meta -->
+        <header>
+          <h1 style="margin:0 0 .5rem 0;">{{ .Title }}</h1>
+
+          {{- $dist := or .Params.distancia .Params.strecke -}}
+          {{- $dura := or .Params.duracion  .Params.dauer -}}
+          {{- $desta:= or .Params.destacado .Params.highlight -}}
+          <div class="tour-meta" style="display:flex;flex-wrap:wrap;gap:.5rem .75rem;margin-top:.25rem;">
+            {{ with $dist  }}<span class="meta-item"><strong>Distancia:</strong> {{ . }}</span>{{ end }}
+            {{ with $dura  }}<span class="meta-item"><strong>Duración:</strong>  {{ . }}</span>{{ end }}
+            {{ with $desta }}<span class="meta-item"><strong>Destacado:</strong> {{ . }}</span>{{ end }}
+          </div>
+        </header>
+
+        {{/* Galerie */}}
+        {{- $g := .Params.gallery -}}
+        {{- $hasGallery := and $g (gt (len $g) 0) -}}
+
+        {{- if $hasGallery -}}
+          {{/* Partial mit stabilem dict-Kontext aufrufen */}}
+          {{ partial "gallery.html" (dict
+              "Page" . 
+              "images" .Params.gallery
+              "dir" ""
+              "autoplay" true
+          ) }}
+        {{- else -}}
+          {{/* Kein gallery-Array: versuche params.image oder cover* */}}
+          {{- $single := "" -}}
+          {{- with .Params.image }}{{ $single = (printf "/%s" (trim . "/")) }}{{ end -}}
+          {{- if not $single -}}
+            {{- with .Resources.GetMatch "cover*" }}{{ $single = .RelPermalink }}{{ end -}}
+          {{- end -}}
+          {{- if $single -}}
+            <section class="gallery-card">
+              <img class="tour-gallery-img"
+                   src="{{ $single }}"
+                   alt="{{ .Title }}"
+                   loading="eager"
+                   onerror="this.onerror=null;this.src='/images/placeholder.jpg';">
+            </section>
+          {{- end -}}
+        {{- end -}}
+
+        <div class="content">
+          {{ .Content }}
+        </div>
+
+      </div>
+    </div>
+
+    <p class="tour-back" style="text-align:right;margin-top:1rem;">
+      <a href="{{ "touren/" | relLangURL }}">← Volver a Tours</a>
+    </p>
+  </article>
+
+{{ end }}

@@ -1,0 +1,18 @@
+# data/tours.yml
+- title: "Bootstour im Pantanal"
+  description: "Erkunde die einzigartigen Wasserwege des Pantanal auf einer geführten Bootstour und beobachte Kaimane, Tukane & Co."
+  image: "images/tour1.jpg"
+  reverse: false
+
+- title: "Sonnenuntergang auf dem Río Paraguay"
+  description: "Genieße den spektakulären Sonnenuntergang über Asunción vom Wasser aus, mit einem Glas Wein in der Hand."
+  image: "images/tour2.jpg"
+  reverse: true
+
+- title: "Abenteuer im Chaco"
+  description: "Erlebe das trockene Gran Chaco per Boot & Geländewagen und entdecke seine Flora und Fauna."
+  image: "images/tour3.jpg"
+  reverse: false
+
+# Wenn du später eine vierte Tour hinzufügst,
+# einfach ein viertes Objekt anhängen.

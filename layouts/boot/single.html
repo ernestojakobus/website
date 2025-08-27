@@ -1,0 +1,50 @@
+{{- /* touren/single.html – ohne <main>, Galerie nur wenn vorhanden */ -}}
+{{ define "main" }}
+
+  <!-- TPL: touren/single -->
+  <article class="bars">
+    <div class="bar-card fade-up">
+      <div class="bar-content" style="flex-direction:column;gap:1.25rem;">
+
+        <header>
+          <h1 style="margin:0 0 .5rem 0;">{{ .Title }}</h1>
+
+          {{- $dist := or .Params.distancia .Params.strecke -}}
+          {{- $dura := or .Params.duracion  .Params.dauer -}}
+          {{- $desta:= or .Params.destacado .Params.highlight -}}
+
+          <div class="tour-meta" style="display:flex;flex-wrap:wrap;gap:.5rem .75rem;margin-top:.25rem;">
+            {{ with $dist  }}<span class="meta-item"><strong>Distancia:</strong> {{ . }}</span>{{ end }}
+            {{ with $dura  }}<span class="meta-item"><strong>Duración:</strong>  {{ . }}</span>{{ end }}
+            {{ with $desta }}<span class="meta-item"><strong>Destacado:</strong> {{ . }}</span>{{ end }}
+          </div>
+        </header>
+
+        {{- $g := .Params.gallery -}}
+        {{- if and $g (gt (len $g) 0) -}}
+          {{ partial "gallery.html" . }}
+        {{- end -}}
+
+        <div class="content">
+          {{ .Content }}
+        </div>
+
+      </div>
+    </div>
+
+    <p class="tour-back" style="text-align:right;margin-top:1rem;">
+      <a href="{{ "touren/" | relLangURL }}">← Volver a Tours</a>
+    </p>
+  </article>
+
+  <style>
+    .bar-card .content img{
+      max-width:100%;
+      height:auto;
+      border-radius:12px;
+      box-shadow:0 4px 16px rgba(0,0,0,.12);
+    }
+    .bar-card .content h2, .bar-card .content h3{ margin-top:1.2rem; }
+  </style>
+
+{{ end }}

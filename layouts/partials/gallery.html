@@ -1,0 +1,137 @@
+{{/* ---------------------------------------------------------
+   PARTIAL: layouts/partials/gallery.html
+   Aufruf aus Templates:  {{ partial "gallery.html" . }}
+   Aufruf aus Shortcode:  {{< gallery … >}} (siehe Wrapper oben)
+   - Liest .Params.gallery oder "images"-Parameter (String/slice)
+   - Optionales dir="subfolder" für Dateinamen ohne Pfad
+   - Autoplay per data-autoplay (Default: true), 10s, Reset bei Interaktion
+   --------------------------------------------------------- */}}
+
+{{- $page := . -}}
+{{- with .Page }}{{ $page = . }}{{ end -}}
+
+{{- $dir := "" -}}
+{{- with .dir }}{{ $dir = . }}{{ end -}}
+
+{{- $autoplay := "true" -}}  {{/* Standard: automatisch wechseln */}}
+{{- with .autoplay }}{{ $autoplay = printf "%v" . | lower }}{{ end -}}
+
+{{- $items := slice -}}
+{{- $imagesParam := .images -}}
+
+{{- if $imagesParam -}}
+  {{- if eq (printf "%T" $imagesParam) "string" -}}
+    {{- range (split $imagesParam ",") -}}{{ $items = $items | append (trim . " ") }}{{- end -}}
+  {{- else -}}
+    {{- $items = $imagesParam -}}
+  {{- end -}}
+{{- else if $page.Params.gallery -}}
+  {{- range $page.Params.gallery -}}{{ $items = $items | append . }}{{- end -}}
+{{- else if $page.Params.galleryImages -}}
+  {{- range $page.Params.galleryImages -}}{{ $items = $items | append . }}{{- end -}}
+{{- end -}}
+
+{{- if gt (len $items) 0 -}}
+<section class="gallery-card">
+  <div class="tour-gallery-wrapper rio-gallery" aria-roledescription="carousel" tabindex="0" data-autoplay="{{ $autoplay }}">
+    <div class="gallery-slides" role="list">
+      {{- range $i, $raw := $items -}}
+        {{- $p := $raw -}}
+
+        {{/* Nur Dateiname? -> mit dir zu images/<dir>/<file> machen */}}
+        {{- if and (ne $dir "") (not (hasPrefix $p "/")) (not (hasPrefix $p "images/")) (not (hasPrefix $p "videos/")) -}}
+          {{- $p = printf "images/%s/%s" $dir $p -}}
+        {{- end -}}
+        {{/* Führenden Slash erzwingen */}}
+        {{- if not (hasPrefix $p "/") -}}{{- $p = printf "/%s" (trim $p "/") -}}{{- end -}}
+
+        {{- $ext := lower (path.Ext $p) -}}
+        <div class="gallery-slide rio-gallery__slide {{ if eq $i 0 }}is-active{{ end }}"
+             role="listitem" aria-hidden="{{ if eq $i 0 }}false{{ else }}true{{ end }}">
+          {{- if or (eq $ext ".mp4") (eq $ext ".webm") (eq $ext ".ogg") -}}
+            <video class="tour-gallery-img" playsinline preload="metadata" controls onerror="this.outerHTML='';">
+              <source src="{{ $p }}" type="video/{{ trim $ext "." }}">
+            </video>
+          {{- else -}}
+            <img class="tour-gallery-img"
+                 src="{{ $p }}"
+                 alt="{{ $page.Title }} – {{ add $i 1 }}/{{ len $items }}"
+                 loading="{{ if eq $i 0 }}eager{{ else }}lazy{{ end }}"
+                 onerror="this.onerror=null;this.src='/images/placeholder.jpg';">
+          {{- end -}}
+        </div>
+      {{- end -}}
+    </div>
+
+    <button class="gallery-prev rio-gallery__btn prev" type="button" aria-label="Anterior" title="Anterior">‹</button>
+    <button class="gallery-next rio-gallery__btn next" type="button" aria-label="Siguiente" title="Siguiente">›</button>
+
+    <div class="gallery-dots rio-gallery__dots" aria-hidden="true">
+      {{- range $i, $_ := $items -}}
+        <button class="gallery-dot rio-gallery__dot {{ if eq $i 0 }}is-active{{ end }}"
+                type="button" data-slide="{{ $i }}" aria-label="Ir a la imagen {{ add $i 1 }}"></button>
+      {{- end -}}
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  if (window.__rioGalleryInit) return;           // Mehrfach-Init verhindern
+  window.__rioGalleryInit = true;
+
+  var wraps = document.querySelectorAll('.tour-gallery-wrapper');
+  wraps.forEach(function (wrap) {
+    var slides = wrap.querySelectorAll('.gallery-slide');
+    var dots   = wrap.querySelectorAll('.gallery-dot');
+    var prev   = wrap.querySelector('.gallery-prev');
+    var next   = wrap.querySelector('.gallery-next');
+    var idx    = 0;
+
+    function show(n){
+      idx = (n + slides.length) % slides.length;
+      for (var i=0;i<slides.length;i++){
+        var active = i===idx;
+        slides[i].classList.toggle('is-active', active);
+        slides[i].setAttribute('aria-hidden', active ? 'false' : 'true');
+        if (dots[i]) dots[i].classList.toggle('is-active', active);
+        // Videos im inaktiven Slide stoppen
+        if (!active) {
+          var vid = slides[i].querySelector('video');
+          if (vid) { try{ vid.pause(); vid.currentTime = 0; }catch(e){} }
+        }
+      }
+    }
+
+    // Timer-Handling (10 s), Reset bei Interaktion
+    var AUTOPLAY_MS = 10000, timer=null;
+    function stop(){ if(timer){ clearInterval(timer); timer=null; } }
+    function start(){
+      stop();
+      var ap = (wrap.getAttribute('data-autoplay') || 'false').toLowerCase() === 'true';
+      if (ap && slides.length>1) timer = setInterval(function(){ show(idx+1); }, AUTOPLAY_MS);
+    }
+    function restart(){ start(); }
+
+    prev && prev.addEventListener('click', function(){ show(idx-1); restart(); });
+    next && next.addEventListener('click', function(){ show(idx+1); restart(); });
+    dots.forEach(function(d){
+      d.addEventListener('click', function(){
+        var to = parseInt(d.getAttribute('data-slide'), 10) || 0;
+        show(to); restart();
+      });
+    });
+
+    wrap.addEventListener('keydown', function(e){
+      if (e.key==='ArrowLeft'){ e.preventDefault(); show(idx-1); restart(); }
+      if (e.key==='ArrowRight'){ e.preventDefault(); show(idx+1); restart(); }
+    });
+    wrap.addEventListener('mouseenter', stop);
+    wrap.addEventListener('mouseleave', start);
+    document.addEventListener('visibilitychange', function(){ if (document.hidden) stop(); else start(); });
+
+    show(0); start();
+  });
+})();
+</script>
+{{- end -}}

@@ -1,0 +1,100 @@
+{{ define "main" }}
+  <style>
+    html, body { margin:0; padding:0; min-height:100%; }
+    main.page__main, .page__inner { max-width:none !important; padding:0 !important; }
+
+    .bars { display:flex; flex-direction:column; gap:4rem; margin:4rem 0; }
+    a.bar { display:block; text-decoration:none; color:inherit; }
+    .bar { width:100%; background:rgba(255,255,255,0.9); padding:4rem 0; box-sizing:border-box; }
+    .bar-content {
+      max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap;
+      align-items:center; justify-content:space-between; gap:2rem; padding:0 2rem;
+    }
+    .bar.reverse .bar-content { flex-direction:row-reverse; }
+    .bar-content img { width:45%; border-radius:12px; object-fit:cover; box-shadow:0 4px 20px rgba(0,0,0,0.1); }
+    .bar-content .text { flex:1; color:#111; font-size:1.1rem; line-height:1.6; }
+    .bar-content .text h2 { margin:0 0 1rem; font-size:2rem; color:#111; }
+    .bar-content .text p { margin:0; color:#333; line-height:1.6; }
+    @media (max-width:768px) {
+      .bar-content { flex-direction:column; }
+      .bar-content img { width:100%; }
+    }
+
+    .social-logos { margin-top:1rem; display:flex; gap:1.5rem; }
+    .social-logos img { width:64px; height:64px; object-fit:contain; transition:transform 0.2s ease; }
+    .social-logos img:hover { transform:scale(1.2); }
+  </style>
+
+  {{/* ---- Bildquellen robust bestimmen ---- */}}
+  {{ $ph := ("images/placeholder.jpg" | relURL) }}
+
+  {{ $toursImg := "" }}
+  {{ if fileExists "static/images/Boot/Touren.png" }}
+    {{ $toursImg = ("images/Boot/Touren.png" | relURL) }}
+  {{ else if fileExists "static/images/touren.png" }}
+    {{ $toursImg = ("images/touren.png" | relURL) }}
+  {{ else }}
+    {{ $toursImg = $ph }}
+  {{ end }}
+
+  {{ $boatImg := "" }}
+  {{ if fileExists "static/images/Boot/unserboot.png" }}
+    {{ $boatImg = ("images/Boot/unserboot.png" | relURL) }}
+  {{ else if fileExists "static/images/unserboot.png" }}
+    {{ $boatImg = ("images/unserboot.png" | relURL) }}
+  {{ else }}
+    {{ $boatImg = $ph }}
+  {{ end }}
+
+  <div class="bars">
+    <!-- Nuestras excursiones -->
+    <a href="{{ "/touren/" | relURL }}" class="bar fade-up" aria-label="Nuestras excursiones">
+      <div class="bar-content">
+        <div class="text fade-left">
+          <h2>Nuestras excursiones</h2>
+          <p>Descubre nuestras rutas en el río.</p>
+        </div>
+        <img
+          src="{{ $toursImg }}"
+          alt="Excursiones en el río"
+          class="fade-right"
+          loading="lazy"
+          onerror="this.onerror=null;this.src='{{ $ph }}';">
+      </div>
+    </a>
+
+    <!-- Nuestra lancha -->
+    <a href="{{ "/boot/" | relURL }}" class="bar fade-up" aria-label="Nuestra lancha">
+      <div class="bar-content">
+        <div class="text fade-left">
+          <h2>Nuestra lancha</h2>
+          <p>Conoce nuestra lancha: ideal para vivir el Río Paraguay.</p>
+        </div>
+        <img
+          src="{{ $boatImg }}"
+          alt="Nuestra lancha"
+          class="fade-right"
+          loading="lazy"
+          onerror="this.onerror=null;this.src='{{ $ph }}';">
+      </div>
+    </a>
+
+    <!-- Redes sociales -->
+    <div class="bar fade-up social-bar">
+      <div class="bar-content">
+        <div class="text fade-left">
+          <h2>Síguenos en redes sociales</h2>
+          <p>Mantente al día y mira nuestras últimas fotos y videos.</p>
+          <div class="social-logos">
+            <a href="https://www.instagram.com/rio_de_oro_lambare/" target="_blank" aria-label="Instagram" rel="noopener">
+              <img src="{{ "images/instagram-icon.png" | relURL }}" alt="Instagram" loading="lazy">
+            </a>
+            <a href="https://www.facebook.com/profile.php?id=61578929368383" target="_blank" aria-label="Facebook" rel="noopener">
+              <img src="{{ "images/facebook-icon.png" | relURL }}" alt="Facebook" loading="lazy">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{{ end }}

@@ -1,0 +1,20 @@
+<footer class="main-footer">
+  <div class="container">
+    <p>&copy; {{ now.Year }} {{ .Site.Title }}. Todos los derechos reservados.</p>
+    <nav class="footer-nav">
+      <a href="{{ "/" | relLangURL }}">Inicio</a>
+      <a href="{{ "/touren/" | relLangURL }}">Tours</a>
+      <a href="{{ "/search/" | relLangURL }}">Buscar</a>
+    </nav>
+  </div>
+
+  <style>
+    .main-footer{padding:2rem 0}
+    .main-footer .container{
+      max-width:1280px;margin:0 auto;padding:0 2rem;
+      display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;
+    }
+    .footer-nav{display:flex;gap:1rem}
+    .footer-nav a{text-decoration:none}
+  </style>
+</footer>
