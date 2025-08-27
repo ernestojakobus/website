@@ -6,7 +6,7 @@ theme: "PaperMod"
 
 # Für GitHub Pages (Projekt unter /website/)
 canonifyURLs: true
-relativeURLs: true
+relativeURLs: false
 
 # ► Spanisch ist Default, keine Sprach-Unterordner
 defaultContentLanguage: es
@@ -78,10 +78,13 @@ params:
   images:
     - "images/papermod-cover.png"
 
-  # Eigene CSS-Datei sauber über das Theme laden
+  # Eigene CSS-Datei
   customCSS:
     - css/custom.css
-  # customJS: []
+
+  # Fingerprinting ausschalten → keine doppelten /website/… Pfade
+  assets:
+    disableFingerprinting: true
 
 outputs:
   home: [HTML, RSS, JSON]
@@ -93,6 +96,6 @@ markup:
   highlight:
     noClasses: false
 
-# Beispiel-Permalinks nur für "posts" (Touren sind eine eigene Section)
+# Beispiel-Permalinks nur für "posts"
 permalinks:
   posts: "/:slug/"
