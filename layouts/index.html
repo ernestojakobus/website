@@ -38,8 +38,8 @@
   {{ end }}
 
   {{ $boatImg := "" }}
-  {{ if fileExists "static/images/Boot/unserboot.png" }}
-    {{ $boatImg = ("images/Boot/unserboot.png" | relURL) }}
+  {{ if fileExists "static/images/boot/unserboot.png" }}
+    {{ $boatImg = ("images/boot/unserboot.png" | relURL) }}
   {{ else if fileExists "static/images/unserboot.png" }}
     {{ $boatImg = ("images/unserboot.png" | relURL) }}
   {{ else }}
