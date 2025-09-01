@@ -594,3 +594,53 @@ html[data-path$="/kontakt/"] .post-header,
 html[data-path$="/kontakt/"] h1.post-title {
   display: none !important;
 }
+/* ===== Boot-Seite breiter: gleiche Optik wie große Cards ===== */
+/* Wir erkennen die Seite an der Canonical-URL /boot/ */
+html:has(head link[rel="canonical"][href*="/boot/"]) body:not(.home) main.page__main,
+html:has(head link[rel="canonical"][href*="/boot/"]) body:not(.home) .page__inner{
+  max-width: 1200px;      /* gleiche Breite wie Header-Container */
+  padding: 1rem 1rem;     /* angenehmer Innenabstand */
+}
+
+/* Optional: die Cards selbst etwas luftiger auf der Boot-Seite */
+html:has(head link[rel="canonical"][href*="/boot/"]) .content-card,
+html:has(head link[rel="canonical"][href*="/boot/"]) .bar-card{
+  margin: 1rem auto;
+  padding: 1rem 1.25rem;
+}
+
+/* Galerie in Cards: füllt die Breite, Höhe aus Ratio (du hast das schon) */
+/* Boot-Seite breiter wie Startseiten-Cards */
+html:has(head link[rel="canonical"][href*="/boot/"]) {
+  --page-width: 1200px;         /* gleiche Breite wie deine großen Cards */
+}
+
+@media (max-width: 920px){
+  html:has(head link[rel="canonical"][href*="/boot/"]) {
+    --page-width: 92vw;         /* mobil schön randnah wie überall */
+  }
+}
+/* ===== Boot XL: breiter + höhere Galerie ===== */
+
+/* mehr Gesamtbreite, mit Rand-Schutz */
+body.is-boot { 
+  --page-width: min(1500px, calc(100vw - 64px));  /* vorher 1200px */
+}
+
+/* Cards auf Boot leicht großzügiger */
+body.is-boot .content-card,
+body.is-boot .bar-card{
+  margin: 1.1rem auto;
+  padding: 1.15rem 1.35rem;
+  border-radius: 16px;
+}
+
+/* Galerie: füllt Breite und wird spürbar höher */
+body.is-boot .gallery-slides{
+  width: 100%;
+  aspect-ratio: auto;                   /* Ratio frei geben */
+  height: clamp(520px, 60vh, 880px);    /* höher als zuvor */
+}
+
+/* Buttons/Dots bleiben sauber innerhalb */
+body.is-boot .tour-gallery-wrapper{ border-radius: 14px; }

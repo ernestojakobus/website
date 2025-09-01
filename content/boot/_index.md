@@ -2,12 +2,13 @@
 title: "Nuestra lancha"
 description: "Conoce nuestra lancha: ideal para vivir el Río Paraguay."
 url: "/boot/"
+layout: "single"
 draft: false
-
-# Ein einziger Showcase: Bilder + Video in Reihenfolge der Liste
-# Assets unter static/… ablegen:
-#   static/images/boot/boot1.jpg, boot2.jpg, boot3.jpg
-#   static/videos/showboot.mp4
+ShowReadingTime: false
+ShowBreadCrumbs: false
+ShowToc: false
+TocOpen: false
+disableShare: true
 gallery:
   - "images/boot/boot1.jpg"
   - "images/boot/boot2.jpg"
@@ -15,11 +16,7 @@ gallery:
   - "images/boot/boot3.jpg"
 ---
 
-<div class="content-card">
-  <h2>Galería 📸</h2>
-  {{< gallery >}}
-</div>
-
+<!-- KEINE zweite Galerie hier! -->
 <div class="content-card">
   <h2>Equipamiento y confort ⚓</h2>
   <ul>
