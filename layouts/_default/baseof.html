@@ -80,10 +80,7 @@
       })();
     </script>
 
-    <!-- Globale Custom-JS aus config.yml (z. B. js/custom-reveal.js) -->
-    {{- range .Site.Params.customJS -}}
-      <script src="{{ . | relURL }}" defer></script>
-    {{- end }}
+  
 
     <!-- Optionaler Hook für seiten-/layout-spezifische Scripts -->
     {{- block "body_end" . }}{{ end -}}
