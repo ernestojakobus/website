@@ -1,0 +1,26 @@
+{{/* socials shortcode:
+     - nutzt den PaperMod-Partial, wenn vorhanden
+     - sonst rendert er einen einfachen Fallback aus params.socialIcons
+*/}}
+{{- $p := "social-icons.html" -}}
+{{- if templates.Exists (printf "partials/%s" $p) -}}
+  {{- partial $p . -}}
+{{- else -}}
+  <ul class="social-icons" style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;padding-left:0;list-style:none;margin:.5rem 0 1rem;">
+    {{- range .Site.Params.socialIcons }}
+      {{- $name := .name | lower -}}
+      {{- $url  := .url -}}
+      {{- $emoji := index (dict
+          "instagram" "📸"  "facebook" "f"  "youtube" "▶️"  "tiktok" "🎵"
+          "twitter" "𝕏"    "x" "𝕏"      "linkedin" "in"   "github" ""
+          "whatsapp" "🟢"
+        ) $name | default "🔗" -}}
+      <li>
+        <a class="social-link social-{{ $name }}" href="{{ $url }}" target="_blank" rel="me noopener noreferrer"
+           aria-label="{{ $name }}" title="{{ $name | title }}">
+          <span style="display:inline-block;min-width:1.75rem;text-align:center;font-weight:700">{{ $emoji }}</span>
+        </a>
+      </li>
+    {{- end }}
+  </ul>
+{{- end -}}

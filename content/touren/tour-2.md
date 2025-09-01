@@ -10,7 +10,6 @@ gallery:
   - "images/touren/tour2/tour-2-1.png"
   - "images/touren/tour2/tour-2-2.png"
   - "images/touren/tour2/tour-2-3.png"
-  - "images/touren/tour2/tour-2-4.png"
 ---
 **Distancia:** aprox. 32–34 km  
 **Duración:** 4,5–5 horas  

@@ -306,3 +306,291 @@ html.page-loaded body {
     opacity: 1 !important;
   }
 }
+
+/* add-on: ganz leichter Slide/Scale beim Enter */
+html.page-loaded body {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 320ms ease,
+    transform 360ms cubic-bezier(.22,.61,.36,1);
+}
+html:not(.page-loaded) body {
+  /* Anfangszustand, gilt nur ganz kurz bis pageshow feuert */
+  opacity: 0;
+  transform: translateY(8px) scale(0.995);
+}
+@media (prefers-reduced-motion: reduce) {
+  html:not(.page-loaded) body { transform: none !important; }
+  html.page-loaded body { transform: none !important; }
+}
+
+html.is-exiting body {
+  opacity: 0;
+  transform: translateY(6px) scale(0.996);
+  transition:
+    opacity 300ms ease,
+    transform 300ms cubic-bezier(.22,.61,.36,1);
+}
+
+/* ========== GALERIE: passt sich automatisch der umgebenden Card an ========== */
+/* 1) Standalone-Default (falls irgendwo außerhalb von Cards benutzt): */
+.gallery-card{
+  max-width: var(--page-width);
+  margin: 1rem auto;
+  padding: 0;
+  background: rgba(255,255,255,.95);
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.12);
+  box-sizing: border-box;
+}
+
+/* 2) Touren-Fall: Galerie IN einer Card/Box → an Box anpassen (kein zweites Kärtchen) */
+.bar-card .gallery-card,
+.content-card .gallery-card,
+.tour-detail-wrapper .gallery-card{
+  /* volle Innenbreite der Box */
+  width: 100%;
+  max-width: 100%;
+  display: block;
+  flex: 1 1 100%;      /* falls der Parent ein Flex-Container ist */
+  align-self: stretch;
+
+  /* keine eigene Karte */
+  margin: .6rem 0;     /* wie ein Absatz in der Box */
+  padding: 0;
+  background: transparent;
+  border-radius: 0;    /* Rundung übernimmt der Wrapper darunter */
+  box-shadow: none;
+  box-sizing: border-box;
+}
+
+/* Bildrahmen sitzt sauber innerhalb der Box, mit eigener Rundung */
+.bar-card .tour-gallery-wrapper,
+.content-card .tour-gallery-wrapper,
+.tour-detail-wrapper .tour-gallery-wrapper{
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px; /* optisch passend zur 14px-Box */
+}
+
+/* Bildfläche: füllt Breite, Höhe aus Ratio → Box wächst automatisch mit */
+.bar-card .gallery-slides,
+.content-card .gallery-slides,
+.tour-detail-wrapper .gallery-slides{
+  width: 100%;
+  position: relative;
+  aspect-ratio: 16 / 9;  /* konsistentes Seitenverhältnis in Cards */
+  height: auto;          /* ergibt sich aus der Breite */
+}
+
+/* Slides & Bild füllen die Fläche */
+.bar-card .gallery-slide,
+.content-card .gallery-slide,
+.tour-detail-wrapper .gallery-slide{
+  position: absolute; inset: 0;
+  opacity: 0; transition: opacity .45s ease-in-out;
+}
+.bar-card .gallery-slide.is-active,
+.content-card .gallery-slide.is-active,
+.tour-detail-wrapper .gallery-slide.is-active{ opacity: 1; }
+
+.bar-card .tour-gallery-img,
+.content-card .tour-gallery-img,
+.tour-detail-wrapper .tour-gallery-img{
+  width: 100% !important; height: 100% !important;
+  object-fit: cover; display: block;
+}
+
+/* Buttons innerhalb der Bildfläche, leicht nach innen */
+.bar-card .gallery-prev, .bar-card .gallery-next,
+.content-card .gallery-prev, .content-card .gallery-next,
+.tour-detail-wrapper .gallery-prev, .tour-detail-wrapper .gallery-next{
+  position: absolute; top: 50%; transform: translateY(-50%);
+  z-index: 5; border: 0; cursor: pointer;
+  width: 44px; height: 44px; border-radius: 999px;
+  background: rgba(0,0,0,.45); color: #fff;
+  box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  transition: transform .1s ease, background-color .2s ease, opacity .2s;
+}
+.bar-card .gallery-prev, .content-card .gallery-prev, .tour-detail-wrapper .gallery-prev{ left: 12px; }
+.bar-card .gallery-next, .content-card .gallery-next, .tour-detail-wrapper .gallery-next{ right: 12px; }
+.bar-card .gallery-prev:hover, .bar-card .gallery-next:hover,
+.content-card .gallery-prev:hover, .content-card .gallery-next:hover,
+.tour-detail-wrapper .gallery-prev:hover, .tour-detail-wrapper .gallery-next:hover{
+  transform: translateY(-1px); background: rgba(0,0,0,.6);
+}
+
+/* Dots zentriert unter der Galerie */
+.bar-card .gallery-dots, .content-card .gallery-dots, .tour-detail-wrapper .gallery-dots{
+  display: flex; gap: 10px; justify-content: center; align-items: center;
+  margin: 10px 0 2px;
+}
+.bar-card .gallery-dot, .content-card .gallery-dot, .tour-detail-wrapper .gallery-dot{
+  width: 10px; height: 10px; border-radius: 50%;
+  background: #cfcfcf; border: none; opacity: .85; cursor: pointer;
+  transition: transform .15s ease, background-color .2s ease, opacity .2s ease;
+}
+.bar-card .gallery-dot.is-active, .content-card .gallery-dot.is-active, .tour-detail-wrapper .gallery-dot.is-active{
+  opacity: 1; transform: scale(1.2);
+}
+
+/* Mobile: mehr Höhe, kleinere Rundung */
+@media (max-width: 920px){
+  .bar-card .tour-gallery-wrapper,
+  .content-card .tour-gallery-wrapper,
+  .tour-detail-wrapper .tour-gallery-wrapper{ border-radius: 10px; }
+
+  .bar-card .gallery-slides,
+  .content-card .gallery-slides,
+  .tour-detail-wrapper .gallery-slides{ aspect-ratio: 16 / 10; }
+}
+/* ===== Page transitions – CONTENT ONLY (Header/Footer bleiben ruhig) ===== */
+
+/* 0) Safety: evtl. alte Body-Transitions neutralisieren */
+html.is-exiting body,
+html.page-loaded body,
+html:not(.page-loaded) body {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+/* 1) Zielelemente: der eigentliche Seiteninhalt */
+main.page__main,
+.page__inner {
+  will-change: opacity, transform;
+}
+
+/* 2) Initial (bevor pageshow feuert) – nur Content, nicht Body */
+html:not(.page-loaded) main.page__main,
+html:not(.page-loaded) .page__inner {
+  opacity: 0;
+  transform: translateY(8px); /* leichter Startversatz */
+}
+
+/* 3) Enter */
+html.page-loaded main.page__main,
+html.page-loaded .page__inner {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 240ms ease,
+    transform 280ms cubic-bezier(.22,.61,.36,1);
+}
+
+/* 4) Exit */
+html.is-exiting main.page__main,
+html.is-exiting .page__inner {
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 180ms ease,
+    transform 220ms cubic-bezier(.22,.61,.36,1);
+}
+
+/* 5) Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  html:not(.page-loaded) main.page__main,
+  html:not(.page-loaded) .page__inner,
+  html.page-loaded main.page__main,
+  html.page-loaded .page__inner,
+  html.is-exiting main.page__main,
+  html.is-exiting .page__inner {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+/* === Contacto: WhatsApp Card === */
+.whatsapp-card{
+  display:flex; align-items:center; gap:1rem;
+}
+.whatsapp-card .wa-left img{
+  display:block; width:64px; height:64px; border-radius:14px;
+  background:#fff; box-shadow:0 6px 22px rgba(0,0,0,.12);
+}
+.whatsapp-card .wa-body{ flex:1 1 auto; }
+.whatsapp-card .wa-actions{ display:flex; align-items:center; gap:.8rem; flex-wrap:wrap; }
+.whatsapp-card .wa-plain{
+  text-decoration:none; font-weight:600; color:#0a6e3d;
+  padding:.35rem .5rem; border-radius:8px; background:rgba(10,110,61,.08);
+}
+@media (max-width: 700px){
+  .whatsapp-card{ flex-direction:row; align-items:flex-start; }
+  .whatsapp-card .wa-left img{ width:56px; height:56px; }
+}
+/* === Social-Follow Card (Kontakt) === */
+.social-follow-card h2{ margin:0 0 .35rem; line-height:1.25; }
+.social-follow-card p{ margin:.1rem 0 1rem; color:#444; }
+
+/* Falls dein socials-Shortcode kein Flex gesetzt hätte,
+   stellen wir hier sicher, dass die Icons waagrecht mit Abstand stehen. */
+.social-follow-card .social-icons{
+  display:flex; gap:.75rem; flex-wrap:wrap; align-items:center;
+  padding-left:0; list-style:none; margin:.5rem 0 0;
+}
+
+/* Icons als „Badges“ – dezent, wie auf der Startseite */
+.social-follow-card .social-icons a{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:44px; height:44px; padding:0 .5rem;
+  border-radius:12px; text-decoration:none;
+  background:rgba(255,255,255,.95);
+  box-shadow:0 4px 14px rgba(0,0,0,.10);
+  font-weight:700;
+}
+
+/* kleine Variante auf Mobile */
+@media (max-width:700px){
+  .social-follow-card .social-icons a{
+    min-width:40px; height:40px; border-radius:10px;
+  }
+}
+
+/* ===== Sticky Footer: Footer bleibt am unteren Rand ===== */
+html, body { height: 100%; }
+body { display: flex; flex-direction: column; }
+main.page__main, .page__inner { flex: 1 0 auto; }
+.main-footer { margin-top: auto; }
+/* === Social-Bar (wie Startseite), global nutzbar === */
+.bar.social-bar{
+  width:100%;
+  background:rgba(255,255,255,0.9);
+  padding:4rem 0;
+  box-sizing:border-box;
+  border-radius:14px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.08);
+  margin:1rem 0;
+}
+.bar.social-bar .bar-content{
+  max-width:1200px;
+  margin:0 auto;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:2rem;
+  padding:0 2rem;
+}
+.bar.social-bar .text{ flex:1; color:#111; font-size:1.1rem; line-height:1.6; }
+.bar.social-bar .text h2{ margin:0 0 1rem; font-size:2rem; color:#111; }
+.bar.social-bar .text p{ margin:0; color:#333; line-height:1.6; }
+.bar.social-bar .social-logos{ margin-top:1rem; display:flex; gap:1.5rem; }
+.bar.social-bar .social-logos img{
+  width:64px; height:64px; object-fit:contain;
+  transition:transform .2s ease; display:block;
+  filter:none;
+}
+.bar.social-bar .social-logos img:hover{ transform:scale(1.2); }
+
+@media (max-width:768px){
+  .bar.social-bar .bar-content{ flex-direction:column; }
+  .bar.social-bar .bar-content img{ width:100%; }
+}
+/* Kontaktseite: Titel/Meta sicher verstecken (robust) */
+html[data-path$="/kontakt/"] .post-header,
+html[data-path$="/kontakt/"] h1.post-title {
+  display: none !important;
+}
