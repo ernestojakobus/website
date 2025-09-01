@@ -1,14 +1,11 @@
 baseURL: "https://ernestojakobus.github.io/website/"
 title: "Río de Oro"
 
-# Lokales Theme aus themes/PaperMod
 theme: "PaperMod"
 
-# Für GitHub Pages (Projekt unter /website/)
 canonifyURLs: true
 relativeURLs: false
 
-# ► Spanisch ist Default, keine Sprach-Unterordner
 defaultContentLanguage: es
 defaultContentLanguageInSubdir: false
 
@@ -27,17 +24,16 @@ languages:
   en:
     disabled: true
 
-# Navigation ohne harte Root-URLs
 menu:
   main:
     - name: Inicio
-      pageRef: /
+      pageRef: ""          # Startseite relativ, wichtig für /website/
       weight: 1
     - name: Tours
-      pageRef: touren          # verweist auf content/touren/_index.md
+      pageRef: touren
       weight: 5
     - name: Contacto
-      pageRef: kontakt         # content/kontakt/_index.md oder kontakt.md
+      pageRef: kontakt     # Seite anlegen oder Menüpunkt entfernen
       weight: 10
 
 enableInlineShortcodes: true
@@ -62,7 +58,6 @@ params:
   author: "Río de Oro"
   defaultTheme: auto
 
-  # PaperMod-Optionen
   ShowShareButtons: true
   ShowReadingTime: true
   ShowPostNavLinks: true
@@ -78,11 +73,11 @@ params:
   images:
     - "images/papermod-cover.png"
 
-  # Eigene CSS-Datei
+  # ► Statisches Custom-CSS (liegt unter static/css/custom.css)
   customCSS:
     - css/custom.css
 
-  # Fingerprinting ausschalten → keine doppelten /website/… Pfade
+  # (Optional) Fingerprinting in PaperMod-Assets abstellen
   assets:
     disableFingerprinting: true
 
@@ -96,6 +91,5 @@ markup:
   highlight:
     noClasses: false
 
-# Beispiel-Permalinks nur für "posts"
 permalinks:
   posts: "/:slug/"

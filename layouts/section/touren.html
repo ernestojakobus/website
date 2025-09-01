@@ -45,7 +45,7 @@
 
           <a href="{{ .RelPermalink }}" style="flex:1 1 40%;display:block;">
             <img src="{{ $cover }}" alt="{{ .Title }}" loading="lazy"
-                 onerror="this.onerror=null;this.src='/images/placeholder.jpg';"
+                 onerror="this.onerror=null;this.src='{{ "images/placeholder.jpg" | relURL }}';"
                  style="width:100%;height:auto;display:block;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,.15);" />
           </a>
         </div>
