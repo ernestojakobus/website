@@ -73,13 +73,15 @@ params:
   images:
     - "images/papermod-cover.png"
 
-  # ► Statisches Custom-CSS (liegt unter static/css/custom.css)
+  # ✅ RICHTIG: CSS & JS getrennt
   customCSS:
     - css/custom.css
+  customJS:
+    - js/custom-reveal.js
 
-  # (Optional) Fingerprinting in PaperMod-Assets abstellen
   assets:
     disableFingerprinting: true
+
 
 outputs:
   home: [HTML, RSS, JSON]
