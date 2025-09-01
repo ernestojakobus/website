@@ -1,22 +1,23 @@
 /* ─────────────────────────────────────────────
-   Global: Layout & Grundkomponenten
+   Río de Oro – Custom (PaperMod extended)
+   Wird automatisch in assets/css/stylesheet.css gemerged
    ───────────────────────────────────────────── */
 
+/* ========== Basis ========== */
 :root{
-  /* Eine Stelle ändern = überall gleiche Seitenbreite */
   --page-width: 860px;
+  --primary: #0077cc;
 }
 
+/* pfadsicherer Hintergrund: absoluter Pfad für /website/ */
 html, body{
-  margin:0;
-  padding:0;
+  margin:0; padding:0;
   font-family: system-ui, sans-serif;
   min-height:100vh;
-  /* Hintergrund der Seite */
-  background: url('../images/asuncion-skyline.png') center/cover no-repeat fixed;
+  background: url('/website/images/asuncion-skyline.png') center/cover no-repeat fixed !important;
 }
 
-/* Startseite randlos; Innenseiten auf Kartenbreite begrenzt */
+/* Startseite randlos; Innenseiten begrenzt */
 body.home main.page__main,
 body.home .page__inner{ max-width:none !important; padding:0 !important; }
 
@@ -25,12 +26,10 @@ body:not(.home) .page__inner{
   max-width: var(--page-width);
   margin: 0 auto;
   padding: .8rem .8rem;
+  box-sizing: border-box;
 }
 
-/* ─────────────────────────────────────────────
-   Header & Footer
-   ───────────────────────────────────────────── */
-
+/* ========== Header & Footer ========== */
 .main-header{
   position: sticky; top:0; z-index:100;
   background: rgba(255,255,255,.9);
@@ -41,10 +40,10 @@ body:not(.home) .page__inner{
   max-width:1200px; margin:0 auto; padding:.55rem 1rem;
   display:flex; justify-content:space-between; align-items:center;
 }
-.main-header .logo{ font-size:1.1rem; font-weight:700; color:#0077cc; text-decoration:none; }
+.main-header .logo{ font-size:1.1rem; font-weight:700; color:var(--primary); text-decoration:none; }
 .main-header .main-nav{ display:flex; gap:.85rem; flex-wrap:wrap; align-items:center; }
 .main-header .main-nav a{ color:#333; text-decoration:none; font-weight:500; padding:.28rem .48rem; transition:color .2s; }
-.main-header .main-nav a:hover{ color:#0077cc; }
+.main-header .main-nav a:hover{ color:var(--primary); }
 
 .main-footer{
   background: rgba(255,255,255,.9);
@@ -60,23 +59,18 @@ body:not(.home) .page__inner{
   display:flex; justify-content:space-between; flex-wrap:wrap; align-items:center; gap:.6rem;
 }
 .footer-nav a{ color:#333; text-decoration:none; font-weight:500; transition:color .2s; }
-.footer-nav a:hover{ color:#0077cc; }
+.footer-nav a:hover{ color:var(--primary); }
 
-/* ─────────────────────────────────────────────
-   Buttons
-   ───────────────────────────────────────────── */
-
+/* ========== Buttons ========== */
 .button{
   display:inline-block; padding:.48rem .85rem;
-  border-radius:10px; background:#0077cc; color:#fff;
+  border-radius:10px; background:var(--primary); color:#fff;
   box-shadow:0 3px 9px rgba(0,0,0,.12); font-size:.95rem;
+  text-decoration:none; border:0; cursor:pointer;
 }
 .button:hover{ filter:brightness(1.05); }
 
-/* ─────────────────────────────────────────────
-   Karten / weiße Boxen
-   ───────────────────────────────────────────── */
-
+/* ========== Karten / Boxen ========== */
 .content-card,
 .bar-card,
 .bar{
@@ -91,7 +85,7 @@ body:not(.home) .page__inner{
 }
 .content-card h2{ margin:0 0 .5rem; line-height:1.25; }
 
-/* Startseite – Sektionen */
+/* Startseiten-Sektionen */
 .bars{
   display:flex; flex-direction:column;
   align-items:center; gap:1.2rem; padding:2rem 0;
@@ -103,48 +97,40 @@ body:not(.home) .page__inner{
 .bar-content .text{ flex:1 1 48%; color:#111; font-size:1.02rem; line-height:1.55; }
 .bar-content img{
   flex:1 1 48%; border-radius:12px; box-shadow:0 4px 14px rgba(0,0,0,.12);
-  object-fit:cover;
+  object-fit:cover; width:100%; height:auto;
 }
 @media (max-width: 920px){
   .bar-content{ flex-direction:column; text-align:center; }
   .bar-content .text, .bar-content img{ flex:1 1 100%; width:100%; height:auto !important; }
 }
 
-/* ─────────────────────────────────────────────
-   Tour-Liste (Kartenraster)
-   ───────────────────────────────────────────── */
-
+/* ========== Tour-Liste (Raster) ========== */
 .toures-grid-inner{
   display:grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap:1rem;
 }
 .card.tour-card{
-  background: var(--theme);
-  color: var(--entry);
+  background: #fff;
+  color: #111;
   border-radius:12px;
-  box-shadow: var(--shadow-l1, 0 6px 20px rgba(0,0,0,.08));
+  box-shadow: 0 6px 20px rgba(0,0,0,.08);
   overflow:hidden;
 }
 .tour-card .card-media{ display:block; }
-.tour-card .card-img{
-  width:100%; height:180px; object-fit:cover; display:block;
-}
+.tour-card .card-img{ width:100%; height:180px; object-fit:cover; display:block; }
 .tour-card .card-body{ padding:1rem; }
 .tour-card .card-title{ margin:0 0 .25rem; font-size:1.15rem; }
 .tour-card .card-text{ margin:.25rem 0 .75rem; }
 .tour-card .card-actions{ display:flex; }
 .tour-card .btn-more{
-  background: var(--primary);
-  color:#fff; padding:.5rem .75rem; border-radius:8px;
-  text-decoration:none; transition: transform .06s ease;
+  background: var(--primary); color:#fff;
+  padding:.5rem .75rem; border-radius:8px; text-decoration:none;
+  transition: transform .06s ease;
 }
 .tour-card .btn-more:hover{ transform: translateY(-1px); }
 
-/* ─────────────────────────────────────────────
-   Tour-Detail: Wrapper & Meta
-   ───────────────────────────────────────────── */
-
+/* ========== Tour-Detail ========== */
 .tour-detail-wrapper{
   max-width: var(--page-width);
   margin:1rem auto;
@@ -156,264 +142,132 @@ body:not(.home) .page__inner{
 }
 .tour-header h1{ margin:0 0 .25rem; line-height:1.2; }
 .tour-date{ color:#666; font-size:.9rem; margin:0 0 1rem; }
-
 .tour-main{ display:flex; gap:1rem; flex-wrap:wrap; }
 .tour-body{ margin-top:1rem; line-height:1.6; }
 .tour-body img{ max-width:100%; height:auto; border-radius:12px; }
 .tour-back{ text-align:right; margin-top:1rem; }
 
-/* Meta-Zeilen unter dem Titel (untereinander, ohne Chip-Optik) */
-.tour-meta{
-  display:block;
-  margin:.25rem 0 .75rem;
-}
-.tour-meta .meta-item{
-  display:block;
-  background:transparent;
-  box-shadow:none;
-  border-radius:0;
-  padding:0;
-  color:#111;
-  white-space:normal;
-  line-height:1.45;
-  margin:.15rem 0;
-}
-.tour-meta .meta-item strong{
-  margin-right:.35rem; font-weight:700;
-}
+/* Meta unter Titel */
+.tour-meta{ margin:.25rem 0 .75rem; }
+.tour-meta .meta-item{ display:block; line-height:1.45; margin:.15rem 0; }
+.tour-meta .meta-item strong{ margin-right:.35rem; }
 
-/* ─────────────────────────────────────────────
-   Galerie-Karte (Rahmen/Box) – Inhalt kommt aus Partial (.rio-gal*)
-   ───────────────────────────────────────────── */
-
+/* ========== Galerie (Tour & Boot) ========== */
 .gallery-card{
   max-width: var(--page-width);
   margin: 1rem auto;
-  padding: 0;                              /* Bild/Videos randlos */
+  padding: 0;
   background: rgba(255,255,255,.95);
   border-radius: 14px;
-  box-shadow: 0 4px 14px rgba(0,0,0,.10);
+  box-shadow: 0 8px 30px rgba(0,0,0,.12);
   box-sizing: border-box;
 }
+.tour-gallery-wrapper { position: relative; overflow: hidden; border-radius: 12px; }
+.gallery-slides { position: relative; aspect-ratio: 16 / 9; }
+.gallery-slide { position: absolute; inset:0; opacity:0; transition: opacity .45s ease-in-out; }
+.gallery-slide.is-active { opacity: 1; }
+.tour-gallery-img { width:100% !important; height:100% !important; object-fit:cover; display:block; }
 
-/* Fix: Pfeile relativ zur Galerie, nicht zum Body positionieren */
-.rio-gallery{ position: relative; }                 /* <— WICHTIG */
-.rio-gallery__viewport{ position: relative; }       /* sicherheitshalber */
-
-.rio-gallery__btn{
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: .75rem;                                     /* Abstand vom Bildrand */
-}
-.rio-gallery__btn.next{ left: auto; right: .75rem; }/* rechter Pfeil */
-
-/* Gilt für die Boot-Galerie (rio-gallery) */
-.rio-gallery { position: relative; }
-.rio-gallery__viewport { position: relative; }
-.rio-gallery__btn{
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: .75rem;
-}
-.rio-gallery__btn.next { left: auto; right: .75rem; }
-
-/* Gilt für die Tour-Galerie (tour-gallery) */
-.tour-gallery-wrapper { position: relative; }
 .gallery-prev, .gallery-next{
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 5;
-  left: .75rem;
-  background: rgba(255,255,255,.9);
-  border: none;
-  width: 38px; height: 38px; border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  position:absolute; top:50%; transform:translateY(-50%);
+  z-index:5; border:0; cursor:pointer;
+  width: 44px; height: 44px; border-radius: 999px;
+  background: rgba(0,0,0,.45); color:#fff;
+  box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  transition: transform .1s ease, background-color .2s ease, opacity .2s;
 }
-.gallery-next{ left: auto; right: .75rem; }
+.gallery-prev{ left:10px; } .gallery-next{ right:10px; }
+.gallery-prev:hover, .gallery-next:hover{ transform: translateY(-1px); background: rgba(0,0,0,.6); }
 
-/* WICHTIG: falls irgendwo noch vorhanden, entfernen! */
-.rio-gallery__btn { /* display: none !important; */ }
-
-/* Pfeile strikt innerhalb der jeweiligen Wrapper halten */
-.tour-gallery-wrapper,
-.rio-gallery { position: relative; }
-
-.tour-gallery-wrapper .gallery-prev,
-.tour-gallery-wrapper .gallery-next,
-.rio-gallery .rio-gallery__btn.prev,
-.rio-gallery .rio-gallery__btn.next{
-  position: absolute !important;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 5;
+.gallery-dots{ display:flex; gap:10px; justify-content:center; align-items:center; margin:10px 0 2px; }
+.gallery-dot{
+  width:10px; height:10px; border-radius:50%;
+  background:#cfcfcf; border:none; opacity:.85; cursor:pointer;
+  transition: transform .15s ease, background-color .2s ease, opacity .2s ease;
 }
+.gallery-dot.is-active{ opacity:1; transform:scale(1.2); }
 
-.tour-gallery-wrapper .gallery-prev{ left: 10px; }
-.tour-gallery-wrapper .gallery-next{ right: 10px; }
-
-.rio-gallery .rio-gallery__btn.prev{ left: 10px; }
-.rio-gallery .rio-gallery__btn.next{ right: 10px; }
-
-/* --- Tour-Detail: Galerie --- */
-.gallery-card {
-  max-width: var(--page-width, 1100px);
-  margin: 1.25rem auto;
-}
-
-.tour-gallery-wrapper {
-  position: relative;
-  overflow: hidden;
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0,0,0,.12);
-}
-
-/* Nur ein Slide sichtbar – JS toggelt .is-active */
-.gallery-slides { position: relative; }
-.gallery-slide { display: none; }
-.gallery-slide.is-active { display: block; }
-
-/* Bild korrekt einpassen (übersteuert evtl. globale img-Regeln) */
-.tour-gallery-img {
-  display: block;
-  width: 100% !important;
-  max-width: 100% !important;
-  height: auto !important;
-  object-fit: cover;
-  aspect-ratio: 16 / 9;   /* verhindert zu hohe Bilder */
-}
-
-/* Navigation (optional hübscher) */
-.gallery-prev,
-.gallery-next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  border: 0;
-  background: rgba(0,0,0,.45);
-  color: #fff;
-  line-height: 1;
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-.gallery-prev { left: 10px; }
-.gallery-next { right: 10px; }
-
-.gallery-dots {
-  display: flex; gap: 8px; justify-content: center;
-  margin: 12px 0 2px;
-}
-.gallery-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: #c9c9c9; border: none; cursor: pointer;
-}
-.gallery-dot.is-active { background: #333; }
-
-/* --- Tour-Detail: Fließtext & Listen --- */
-.bar-card .content {
-  max-width: var(--page-width, 1100px);
-}
-
-.bar-card .content ol,
-.bar-card .content ul {
-  padding-left: 1.15rem;
-  margin: .5rem 0 1rem;
-}
-
-.bar-card .content li { margin: .25rem 0; line-height: 1.55; }
-
-/* Bilder innerhalb der Inhalte UND in der Galerie gleich behandeln */
+/* Bilder in Cards & Galerie konsistent */
 .bar-card .content img,
-.gallery-card img {
-  max-width: 100%;
-  height: auto;
+.gallery-card img{
+  max-width:100%; height:auto;
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0,0,0,.12);
 }
 
-/* Galerie: Dots lockerer & klickfreundlicher */
-.gallery-dots{
-  display:flex;
-  gap: 12px;                 /* mehr Abstand */
-  justify-content:center;
-  align-items:center;
-  padding: 10px 0 6px;
+/* Listen hübsch & eingerückt */
+.bar-card .content ol,
+.bar-card .content ul,
+.tour-detail-wrapper .content ol,
+.tour-detail-wrapper .content ul{
+  padding-left: 1.5rem;
+  margin: .5rem 0 1rem;
 }
-.gallery-dot{
-  width: 10px; height: 10px; /* etwas größer */
-  border-radius: 50%;
-  background: #cfcfcf;
-  border: none;
-  opacity: .8;
-  transition: transform .15s ease, background-color .2s ease, opacity .2s ease;
-  cursor: pointer;
-}
-.gallery-dot:hover{ opacity: 1; }
-.gallery-dot.is-active{
-  background: #333;
-  transform: scale(1.25);    /* der aktive Dot „popt“ leicht */
-  opacity: 1;
+.bar-card .content li,
+.tour-detail-wrapper .content li{
+  margin: .25rem 0;
+  line-height: 1.55;
 }
 
-/* ── Galerie: Smooth Fade (übersteuert ältere Regeln) ───────────── */
-.tour-gallery-wrapper .gallery-slides{
-  position: relative;
-  aspect-ratio: 16 / 9;          /* stabile Höhe */
+/* ========== Reveal-Animationen (für Cards & Galerie) ========== */
+.reveal{
+  opacity:0;
+  transform: translateY(18px);
+  transition: opacity .55s cubic-bezier(.22,.61,.36,1),
+              transform .55s cubic-bezier(.22,.61,.36,1);
+  will-change: opacity, transform;
 }
-
-.tour-gallery-wrapper .gallery-slide{
-  display: block !important;     /* killt display:none von oben */
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .45s ease-in-out;
-}
-
-.tour-gallery-wrapper .gallery-slide.is-active{
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Bild füllt die Fläche der Slides */
-.tour-gallery-wrapper .tour-gallery-img{
-  display: block;
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover;
-}
-
-/* sanftere Dots bleiben wie von dir definiert */
+.reveal.reveal--visible{ opacity:1; transform:none; }
+.reveal[data-reveal-delay="1"]{ transition-delay:.06s; }
+.reveal[data-reveal-delay="2"]{ transition-delay:.12s; }
+.reveal[data-reveal-delay="3"]{ transition-delay:.18s; }
+.reveal[data-reveal-delay="4"]{ transition-delay:.24s; }
 @media (prefers-reduced-motion: reduce){
-  .tour-gallery-wrapper .gallery-slide{ transition: none; }
+  .reveal{ transition:none !important; transform:none !important; }
+  .gallery-slide{ transition:none !important; }
 }
 
-/* Galerie in .bar-content auf volle Breite strecken */
-.bar-card .bar-content{ align-items: stretch; }          /* statt flex-start */
-.bar-card .bar-content > *{ align-self: stretch; width:100%; }
+/* ========== Mobile Tweaks (<= 768px) ========== */
+@media (max-width: 768px){
+  :root { --page-width: 92vw; }
+  body:not(.home) main.page__main,
+  body:not(.home) .page__inner{
+    max-width: var(--page-width);
+    margin: 0 auto;
+    padding: .6rem .6rem;
+  }
+  .tour-header h1{ font-size:1.45rem; line-height:1.25; }
+  .tour-date{ font-size:.88rem; }
 
-/* Sicherheitsnetz: die Galerie-Wrapper sollen 100% Breite haben */
-.gallery-card,
-.tour-gallery-wrapper,
-.tour-gallery-wrapper .gallery-slides{ width:100%; }
+  .content-card, .bar-card, .bar, .tour-detail-wrapper, .gallery-card{
+    margin:.65rem auto;
+    padding:.75rem .8rem;
+    border-radius:12px;
+    box-shadow:0 3px 12px rgba(0,0,0,.10);
+  }
 
-.gallery-slides {
-  position: relative;
+  .bar-content{ flex-direction:column; gap:.9rem; text-align:center; }
+  .bar-content .text{ flex:1 1 100%; font-size:1rem; }
+  .bar-content img{ width:100%; height:auto !important; }
+
+  .gallery-slides{ aspect-ratio: 16 / 10; }
+  .gallery-prev, .gallery-next{ width:42px; height:42px; font-size:20px; }
+  .gallery-dots{ gap:8px; margin:8px 0 0; }
+  .gallery-dot{ width:9px; height:9px; }
+
+  .main-header .container{ padding:.55rem 1rem; }
+  .main-header .logo{ font-size:1.2rem; }
+  .main-nav{ gap:.8rem; }
+  .main-nav a{ padding:.25rem .35rem; }
+
+  .button{ padding:.6rem .9rem; border-radius:10px; font-size:1rem; }
+
+  /* WhatsApp-Bubble */
+  a.whatsapp-float{ width:90px !important; height:90px !important; right:14px !important; bottom:18px !important; }
 }
 
-.gallery-slide {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  opacity: 0;
-  transition: opacity 0.8s ease; /* Übergang */
-  z-index: 0;
-}
-
-.gallery-slide.is-active {
-  opacity: 1;
-  z-index: 1;
+@media (max-width: 400px){
+  .tour-header h1{ font-size:1.25rem; }
+  .gallery-prev, .gallery-next{ width:38px; height:38px; font-size:18px; }
+  .button{ font-size:.95rem; padding:.55rem .8rem; }
 }
