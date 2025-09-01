@@ -1,0 +1,45 @@
+{{ define "main" }}
+  <section class="container" style="padding:2rem 1rem;">
+    <h1>{{ .Title }}</h1>
+
+    {{ $pages := where site.RegularPages "Section" "touren" }}
+    {{ $pages = sort $pages "Weight" "asc" "Date" "desc" }}
+
+    {{ if gt (len $pages) 0 }}
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin-top:1rem;">
+        {{ range $pages }}
+          {{ $cover := "" }}
+          {{ with .Resources.GetMatch "cover*" }}{{ $cover = .RelPermalink }}{{ end }}
+          {{ if not $cover }}{{ with .Params.image }}{{ $cover = (trim . "/") }}{{ end }}{{ end }}
+          {{ if not $cover }}{{ with .Params.gallery }}{{ if gt (len .) 0 }}
+            {{ $g0 := index . 0 }}
+            {{ if eq (printf "%T" $g0) "string" }}{{ $cover = (trim $g0 "/") }}{{ end }}
+          {{ end }}{{ end }}{{ end }}
+          {{ if not $cover }}
+            {{ $base := lower .File.TranslationBaseName }}{{ $dir := replace $base "-" "" }}
+            {{ $try := slice
+                (printf "static/images/touren/%s/cover.png"  $dir)
+                (printf "static/images/touren/%s/cover.jpg"  $dir)
+                (printf "static/images/touren/%s/cover.jpeg" $dir) }}
+            {{ range $try }}
+              {{ if not $cover }}{{ if fileExists . }}{{ $cover = (printf "images/touren/%s/%s" $dir (path.Base .)) | relURL }}{{ end }}{{ end }}
+            {{ end }}
+          {{ end }}
+          {{ if not $cover }}{{ $cover = ( "images/placeholder.jpg" | relURL ) }}{{ end }}
+
+          <article style="border:1px solid #ddd;border-radius:12px;padding:1rem;">
+            <a href="{{ .RelPermalink }}" style="display:block">
+              <img src="{{ $cover | relURL }}" alt="{{ .Title }}" loading="lazy"
+                   onerror="this.onerror=null;this.src='{{ "images/placeholder.jpg" | relURL }}';"
+                   style="width:100%;height:180px;object-fit:cover;border-radius:8px" />
+            </a>
+            <h2 style="margin:.8rem 0 .4rem"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+            {{ with .Summary }}<p>{{ . }}</p>{{ end }}
+          </article>
+        {{ end }}
+      </div>
+    {{ else }}
+      <p>No se encontraron páginas en <code>content/touren/</code>.</p>
+    {{ end }}
+  </section>
+{{ end }}

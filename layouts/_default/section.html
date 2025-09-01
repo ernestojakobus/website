@@ -1,7 +1,8 @@
-﻿{{ define "main" }}
+{{ define "main" }}
   <section class="container" style="padding:2rem 1rem;">
     <h1>{{ .Title }}</h1>
-    <p style="opacity:.6">(_default/list.html greift)</p>
+    <p style="opacity:.6">(_default/section.html greift)</p>
+
     {{ if .Pages }}
       <ul>
         {{ range .Pages.ByTitle }}
