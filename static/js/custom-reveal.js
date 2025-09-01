@@ -1,64 +1,49 @@
-/* Río de Oro – Reveal & Gallery (vanilla, no deps)
-   - Scroll-Reveal für Karten/Boxen
-   - Mini-Galerie-Steuerung (Pfeile & Dots)
-   Speichere diese Datei OHNE <script>-Tags. Lade sie mit "defer".
-*/
-(() => {
-  /* ==================== Scroll Reveal ==================== */
-  const sel = ['.bar-card', '.content-card', '.card.tour-card', '.gallery-card'];
-  const items = Array.from(document.querySelectorAll(sel.join(',')));
+/* static/js/custom-reveal.js – robustes Scroll-Reveal für PaperMod */
+(function () {
+  // Elemente, die animiert werden sollen (passt zu deinem HTML: .bar-card)
+  const SELECTOR = ".bar-card, .content-card, .bar, .fade-up, .fade-left, .fade-right";
+  const THRESHOLD = 0.12;
 
-  // .reveal auf alle Items + leichte Staffelung
-  items.forEach((el, i) => {
-    el.classList.add('reveal');
-    el.setAttribute('data-reveal-delay', String(i % 4));
-  });
-
-  const makeVisible = el => el.classList.add('reveal--visible');
-
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          makeVisible(e.target);
-          io.unobserve(e.target);
-        }
-      });
-    }, { root: null, rootMargin: '0px 0px -10% 0px', threshold: 0.12 });
-
-    items.forEach(el => io.observe(el));
-  } else {
-    // Fallback: sofort sichtbar
-    items.forEach(makeVisible);
+  function markVisible(el){
+    el.classList.add("reveal--visible");
+    el.classList.remove("reveal");
   }
 
-  /* ==================== Gallery ==================== */
-  function initGallery(root) {
-    const slides = root.querySelectorAll('.gallery-slide');
-    if (!slides.length) return;
+  function prepare(el, i){
+    if (!el.classList.contains("reveal")) el.classList.add("reveal");
+    if (!el.style.getPropertyValue("--rv-delay") && el.parentElement?.classList.contains("reveal-group")){
+      el.style.setProperty("--rv-delay", `${(i % 6) * 60}ms`);
+    }
+  }
 
-    const dots = root.querySelectorAll('.gallery-dot');
-    const prev = root.querySelector('.gallery-prev');
-    const next = root.querySelector('.gallery-next');
-    let idx = 0;
+  function init(container){
+    const targets = Array.from(container.querySelectorAll(SELECTOR));
+    if (!targets.length) return;
 
-    function show(i) {
-      idx = (i + slides.length) % slides.length;
-      slides.forEach((s, k) => s.classList.toggle('is-active', k === idx));
-      dots.forEach((d, k) => d.classList.toggle('is-active', k === idx));
+    targets.forEach(prepare);
+
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced || !("IntersectionObserver" in window)) {
+      targets.forEach(markVisible);
+      return;
     }
 
-    prev && prev.addEventListener('click', () => show(idx - 1));
-    next && next.addEventListener('click', () => show(idx + 1));
-    dots.forEach(d => d.addEventListener('click', () => {
-      const i = Number(d.getAttribute('data-index') || '0');
-      show(i);
-    }));
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          markVisible(en.target);
+          io.unobserve(en.target);
+        }
+      });
+    }, { root: null, rootMargin: "0px 0px -1px 0px", threshold: THRESHOLD });
 
-    show(0);
+    targets.forEach((el) => io.observe(el));
   }
 
-  // Tour-Galerien initialisieren
-  document.querySelectorAll('.tour-gallery-wrapper,[data-gallery]')
-    .forEach(initGallery);
+  // Start sobald DOM bereit
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => init(document), { once: true });
+  } else {
+    init(document);
+  }
 })();

@@ -1,6 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
-  {{- partial "head.html" . -}}
+<html lang="{{ .Site.Language.Lang | default "es" }}">
+  <head>
+    {{- partial "head.html" . -}}
+  </head>
+
   <body class="{{ default "auto" .Site.Params.defaultTheme }}">
     {{- partial "header.html" . -}}
 
@@ -76,5 +79,13 @@
         }, 25000);
       })();
     </script>
+
+    <!-- Globale Custom-JS aus config.yml (z. B. js/custom-reveal.js) -->
+    {{- range .Site.Params.customJS -}}
+      <script src="{{ . | relURL }}" defer></script>
+    {{- end }}
+
+    <!-- Optionaler Hook für seiten-/layout-spezifische Scripts -->
+    {{- block "body_end" . }}{{ end -}}
   </body>
 </html>

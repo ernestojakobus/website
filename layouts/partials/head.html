@@ -1,4 +1,4 @@
-{{/* layouts/partials/head.html  —  minimal & PaperMod-kompatibel */}}
+<!-- layouts/partials/head.html -->
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -9,20 +9,18 @@
   <meta name="description" content="{{ $desc }}">
   <link rel="canonical" href="{{ .Permalink }}">
 
-  {{/* PaperMod-Stylesheet: wird vom Theme unter /assets/css/stylesheet.css ausgeliefert */}}
-  <link rel="stylesheet" href="{{ "assets/css/stylesheet.css" | relURL }}">
+  <!-- ✅ deine statischen Styles -->
+  <link rel="stylesheet" href="{{ "css/style.css"  | relURL }}">
+  <link rel="stylesheet" href="{{ "css/custom.css" | relURL }}">
 
-  {{/* Dein(e) Custom-CSS aus config.yml → params.customCSS */}}
-  {{- range .Site.Params.customCSS -}}
-    <link rel="stylesheet" href="{{ . | relURL }}">
+  <!-- ✅ deine Scripts aus config.yml (params.customJS) -->
+  {{- with .Site.Params.customJS -}}
+    {{- range . -}}
+      <script src="{{ . | relURL }}" defer></script>
+    {{- end -}}
   {{- end }}
 
-  {{/* Dein(e) Custom-JS aus config.yml → params.customJS (defer) */}}
-  {{- range .Site.Params.customJS -}}
-    <script src="{{ . | relURL }}" defer></script>
-  {{- end }}
-
-  {{/* Favicon (optional) */}}
+  <!-- Favicon -->
   {{- with .Site.Params.assets.favicon -}}
     <link rel="icon" href="{{ . | relURL }}">
   {{- else -}}
