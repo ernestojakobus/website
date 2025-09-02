@@ -29,8 +29,8 @@
   {{ $ph := ("images/placeholder.jpg" | relURL) }}
 
   {{ $toursImg := "" }}
-  {{ if fileExists "static/images/Boot/Touren.png" }}
-    {{ $toursImg = ("images/Boot/Touren.png" | relURL) }}
+  {{ if fileExists "static/images/boot/Touren.png" }}
+    {{ $toursImg = ("images/boot/Touren.png" | relURL) }}
   {{ else if fileExists "static/images/touren.png" }}
     {{ $toursImg = ("images/touren.png" | relURL) }}
   {{ else }}
