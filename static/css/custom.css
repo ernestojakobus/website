@@ -644,3 +644,32 @@ body.is-boot .gallery-slides{
 
 /* Buttons/Dots bleiben sauber innerhalb */
 body.is-boot .tour-gallery-wrapper{ border-radius: 14px; }
+/* ===== Gallery: Controls klickbar + korrekt positioniert ===== */
+.tour-gallery-wrapper { position: relative; }
+
+/* Slides nehmen keine Klicks entgegen */
+.gallery-slides,
+.gallery-slide,
+.tour-gallery-img { pointer-events: none; }
+
+/* Pfeile: absolut zentriert links/rechts */
+.gallery-prev,
+.gallery-next{
+  pointer-events: auto;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+}
+.gallery-prev  { left: 12px; }
+.gallery-next  { right: 12px; }
+
+/* Dots: unten mittig */
+.gallery-dots{
+  pointer-events: auto;
+  position: absolute;
+  left: 0; right: 0; bottom: 10px;
+  display: flex; justify-content: center; gap: 10px;
+  z-index: 20;
+}
+

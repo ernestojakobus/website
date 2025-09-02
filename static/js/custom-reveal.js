@@ -134,3 +134,92 @@ document.documentElement.setAttribute('data-path', window.location.pathname);
     }, EXIT_MS - 20); // leicht früher, damit es „snappy“ wirkt
   }, false);
 })();
+/* ==== Simple Gallery Controller (prev/next/dots/keys/swipe) ==== */
+(function () {
+  if (window.__rioGalleryInit) return; window.__rioGalleryInit = true;
+
+  function ready(fn){ 
+    if (document.readyState !== 'loading') fn(); 
+    else document.addEventListener('DOMContentLoaded', fn);
+  }
+
+  function initOne(wrapper){
+    if (!wrapper) return;
+    var slidesWrap = wrapper.querySelector('.gallery-slides');
+    var slides = slidesWrap ? Array.from(slidesWrap.querySelectorAll('.gallery-slide')) : [];
+
+    // Falls keine .gallery-slide vorhanden: nicht anfassen (zeigt statisch)
+    if (!slidesWrap || slides.length === 0) return;
+
+    // Controls finden oder erzeugen
+    function mkBtn(cls, label, html){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = cls;
+      b.setAttribute('aria-label', label);
+      if (html) b.innerHTML = html;
+      return b;
+    }
+
+    var prev = wrapper.querySelector('.gallery-prev') || mkBtn('gallery-prev','Bild zurück','&#10094;');
+    var next = wrapper.querySelector('.gallery-next') || mkBtn('gallery-next','Bild weiter','&#10095;');
+    if (!prev.parentNode) wrapper.appendChild(prev);
+    if (!next.parentNode) wrapper.appendChild(next);
+
+    var dotsWrap = wrapper.querySelector('.gallery-dots');
+    if (!dotsWrap){ dotsWrap = document.createElement('div'); dotsWrap.className = 'gallery-dots'; wrapper.appendChild(dotsWrap); }
+    dotsWrap.innerHTML = '';
+    var dots = slides.map(function(_,i){
+      var d = mkBtn('gallery-dot','Gehe zu Bild '+(i+1));
+      dotsWrap.appendChild(d);
+      return d;
+    });
+
+    var index = 0;
+    function show(i){
+      if (i < 0) i = slides.length - 1;
+      if (i >= slides.length) i = 0;
+      slides.forEach((s,k)=> s.classList.toggle('is-active', k===i));
+      dots.forEach((d,k)=> d.classList.toggle('is-active', k===i));
+      index = i;
+    }
+    show(0);
+
+    // Klick-Handler (gegen Page-Exit-Interception absichern)
+    function eat(e){ e.preventDefault(); e.stopPropagation(); }
+    prev.addEventListener('click', function(e){ eat(e); show(index-1); }, {capture:true});
+    next.addEventListener('click', function(e){ eat(e); show(index+1); }, {capture:true});
+    dots.forEach((d,k)=> d.addEventListener('click', function(e){ eat(e); show(k); }, {capture:true}));
+
+    // Keyboard-Navigation, wenn fokussiert
+    wrapper.tabIndex = 0;
+    wrapper.addEventListener('keydown', function(e){
+      if (e.key === 'ArrowLeft') { e.preventDefault(); show(index-1); }
+      if (e.key === 'ArrowRight'){ e.preventDefault(); show(index+1); }
+    });
+
+    // Touch/Swipe
+    var startX = null;
+    slidesWrap.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true});
+    slidesWrap.addEventListener('touchend', e => {
+      if (startX == null) return;
+      var dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 30) show(index + (dx < 0 ? 1 : -1));
+      startX = null;
+    }, {passive:true});
+
+    // Safety: Bedienelemente müssen „oberhalb“ und klickbar sein
+    [prev, next, dotsWrap].forEach(el => {
+  el.style.pointerEvents = 'auto';
+  el.style.zIndex = '30';       // Position NICHT setzen – macht das CSS
+});
+
+    // Slides selbst sollten Klicks nicht fressen
+    slidesWrap.style.pointerEvents = 'none';
+    slides.forEach(s=> s.style.pointerEvents = 'none');
+  }
+
+  ready(function(){
+    document.querySelectorAll('.tour-gallery-wrapper').forEach(initOne);
+  });
+})();
